@@ -92,3 +92,7 @@ psql nzclubs -c "\copy (SELECT
 FROM competitions_solve 
 ORDER BY submission_id, id
 ) TO 'Solve.csv' DELIMITER ',' CSV HEADER;"
+
+
+tar cvf exports.tar *.csv
+rm *.csv
