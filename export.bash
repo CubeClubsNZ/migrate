@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
 
+# missing isClubOrganiser
 psql nzclubs -c "\copy (SELECT 
-    accounts_cuberprofile.id,
-    accounts_cuberprofile.email,
-    password AS \"passHash\",
-    full_name AS name,
-    region
-FROM accounts_cuberprofile 
-INNER JOIN accounts_account 
-    ON accounts_cuberprofile.id=accounts_account.id
+    ac.id AS id, ac.email, 
+    aa.password as \"passHash\", 
+    ac.full_name as name, 
+    ac.region 
+FROM accounts_cuberprofile ac 
+LEFT JOIN accounts_account aa 
+    ON ac.user_id=aa.id 
+ORDER BY id
 ) TO 'User.csv' DELIMITER ',' CSV HEADER;"
 
 
+# combine venue+venue_details into venue
+# remove time from date
+# missing isPublished
 psql nzclubs -c "\copy (SELECT 
     id,
     name,
@@ -86,6 +90,8 @@ FROM competitions_submission
 
 
 
+# map solve id to index, start from 0
+# combine penalty
 psql nzclubs -c "\copy (SELECT 
     id, 
     time, 
