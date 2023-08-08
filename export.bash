@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 psql nzclubs -c "\copy (SELECT 
     accounts_cuberprofile.id,
     accounts_cuberprofile.email,
