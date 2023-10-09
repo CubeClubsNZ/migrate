@@ -6,15 +6,13 @@ CREATE SERVER IF NOT EXISTS cubeclubs_prod
 	FOREIGN DATA WRAPPER postgres_fdw
 	OPTIONS (host 'cubeclubs.nz', dbname 'nzclubs', port '5432');
 
-CREATE USER MAPPING IF NOT EXISTS FOR CURRENT_USER SERVER cubeclubs_prod OPTIONS (user 'postgres', password <YOUR PASSWORD HERE>);
+CREATE USER MAPPING IF NOT EXISTS FOR CURRENT_USER SERVER cubeclubs_prod OPTIONS (user 'postgres', password '<Password>');
 
 CREATE SCHEMA IF NOT EXISTS old_public;
 
-/*
 IMPORT FOREIGN SCHEMA public
 	FROM SERVER cubeclubs_prod
 	INTO old_public;
-*/
 
 
 INSERT INTO public.user (id, email, pass_hash, name, region, is_club_organiser)
@@ -35,7 +33,7 @@ INSERT INTO public.user (id, email, pass_hash, name, region, is_club_organiser)
 		CASE
 			WHEN ac.region = 'Manawatu' THEN 'MANAWATU_WHANGANUI'
 			WHEN ac.region = 'Bay of Plenty' THEN 'BOP'
-			ELSE cast(upper(regexp_replace(replace(ac.region, ' ', '_'), '\W+', '', 'g')) AS region)
+			ELSE cast(upper(regexp_replace(replace(ac.region, ' ', '_'), '\W+', '', 'g')) AS "Region")
 		END my_region,
 		-- Club organisers
 		ac.id IN (1,27,5,34,55,50,92,147,268,287,591)
@@ -144,7 +142,7 @@ INSERT INTO user_in_meetup (user_id, meetup_id, registered_events)
 				WHEN 'FMC' THEN		'FMC'
 				WHEN '3BLD' THEN	'THREEBLD'
 				WHEN '3MBLD' THEN	'MULTIBLD'
-			END AS puzzle)
+			END AS "Puzzle")
 		)
 	FROM
 		old_public.competitions_registration cr
@@ -196,8 +194,8 @@ INSERT INTO round (id, old_id, start_date, end_date, puzzle, format, proceed_num
 				WHEN 'FMC' THEN		'FMC'
 				WHEN '3BLD' THEN	'THREEBLD'
 				WHEN '3MBLD' THEN	'MULTIBLD'
-			END AS puzzle),
-			CAST(UPPER(format) AS format),
+			END AS "Puzzle"),
+			CAST(UPPER(format) AS "Format"),
 			coalesce(proceed, 0),
 			comp_id
 		FROM old_public.competitions_event
