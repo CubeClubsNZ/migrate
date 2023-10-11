@@ -6,7 +6,7 @@ CREATE SERVER IF NOT EXISTS cubeclubs_prod
 	FOREIGN DATA WRAPPER postgres_fdw
 	OPTIONS (host 'cubeclubs.nz', dbname 'nzclubs', port '5432');
 
-CREATE USER MAPPING IF NOT EXISTS FOR CURRENT_USER SERVER cubeclubs_prod OPTIONS (user 'postgres', password '<Password>');
+CREATE USER MAPPING IF NOT EXISTS FOR CURRENT_USER SERVER cubeclubs_prod OPTIONS (user 'postgres', password '<password>');
 
 CREATE SCHEMA IF NOT EXISTS old_public;
 
@@ -91,9 +91,9 @@ INSERT INTO meetup (id, name, venue, location, description, contact, competitor_
 			ELSE description
 		END,
 		CASE
-			WHEN description IS NULL
+			WHEN (contact_email IS NULL OR contact_email = '-')
 				THEN 'No contact information.'
-			ELSE description
+			ELSE contact_email
 		END,
 		competitor_limit,
 		registration_link,
